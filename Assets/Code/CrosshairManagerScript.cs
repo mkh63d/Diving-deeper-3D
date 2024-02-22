@@ -5,6 +5,7 @@ using UnityEngine;
 public class CrosshairManagerScript : MonoBehaviour
 {
     public GameObject crosshair_default, crosshair_pickable, crosshair_holding;
+    private GameObject[] pickableObjects;
     private enum CrosshairState
     {
         Default,
@@ -16,33 +17,27 @@ public class CrosshairManagerScript : MonoBehaviour
 
     void Start()
     {
+        pickableObjects=GameObject.FindGameObjectsWithTag("Pickable");
         SetCrosshairState(CrosshairState.Default);
     }
 
-    void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("MainCamera"))
-        {
-            SetCrosshairState(CrosshairState.Pickable);
-        }
-    }
+    void Update(){
+        foreach (GameObject obj in pickableObjects){
+            if(obj.GetComponent<ObjectPickup>().interactable){
+                SetCrosshairState(CrosshairState.Pickable);
 
-    void OnTriggerExit(Collider other)
-    {
-        if (other.CompareTag("MainCamera"))
-        {
-            SetCrosshairState(CrosshairState.Default);
+                if(obj.GetComponent<ObjectPickup>().pickedup){
+                    SetCrosshairState(CrosshairState.Holding);
+                }
+                break;                
+            }else
+                SetCrosshairState(CrosshairState.Default); 
         }
-    }
-
-    // Call this method from the ObjectPickup script when holding/unholding an object
-    public void SetHoldingState(bool holding)
-    {
-        SetCrosshairState(holding ? CrosshairState.Holding : CrosshairState.Default);
     }
 
     private void SetCrosshairState(CrosshairState newState)
     {
+        Debug.Log("SetCrosshairState with newState: "+ newState);
         crosshair_default.SetActive(newState == CrosshairState.Default);
         crosshair_pickable.SetActive(newState == CrosshairState.Pickable);
         crosshair_holding.SetActive(newState == CrosshairState.Holding);

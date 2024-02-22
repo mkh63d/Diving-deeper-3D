@@ -9,18 +9,10 @@ public class ObjectPickup : MonoBehaviour
     public Rigidbody objRigidbody;
     public float throwAmount;
 
-    private CrosshairManagerScript crosshairManager;
-
-    void Start()
-    {
-        crosshairManager = GameObject.FindWithTag("CrosshairManager").GetComponent<CrosshairManagerScript>(); //Find crosshair manager
-    }
-
     void OnTriggerStay(Collider other)
     {
         if (other.CompareTag("MainCamera"))
         {
-            crosshairManager.SetHoldingState(false); // Not holding an object
             interactable = true;
         }
     }
@@ -28,7 +20,6 @@ public class ObjectPickup : MonoBehaviour
     void OnTriggerExit(Collider other){
         if (other.CompareTag("MainCamera")){
             if (!pickedup){
-                crosshairManager.SetHoldingState(false); // Not holding an object
                 interactable = false;
             }
             else{
@@ -36,7 +27,6 @@ public class ObjectPickup : MonoBehaviour
                     objTransform.parent = null;
                     objRigidbody.useGravity = true;
                     pickedup = false;
-                    crosshairManager.SetHoldingState(false); // Not holding an object
                 }
             }
         }
@@ -52,7 +42,6 @@ public class ObjectPickup : MonoBehaviour
                 objTransform.parent = cameraTrans;
                 objRigidbody.useGravity = false;
                 pickedup = true;
-                crosshairManager.SetHoldingState(true); // Holding an object
             }
 
             // Drop the object
@@ -61,7 +50,6 @@ public class ObjectPickup : MonoBehaviour
                 objTransform.parent = null;
                 objRigidbody.useGravity = true;
                 pickedup = false;
-                crosshairManager.SetHoldingState(false); // Not holding an object
             }
 
             // Throw the object
@@ -71,7 +59,6 @@ public class ObjectPickup : MonoBehaviour
                 objRigidbody.useGravity = true;
                 objRigidbody.velocity = cameraTrans.forward * throwAmount * Time.deltaTime;
                 pickedup = false;
-                crosshairManager.SetHoldingState(false); // Not holding an object
             }
         }
     }
