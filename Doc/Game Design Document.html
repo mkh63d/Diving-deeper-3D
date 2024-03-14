@@ -5,54 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Game Design Project</title>
     <link rel="stylesheet" href="styles.css">
-    <script src="scripts.js"></script>
 </head>
 <body>
-    <div id="container">
-        <div class="card" id="card1">
-          <div class="front">
-            <h2>Concept</h2>
-            <p>Make your way through the Gozom to the Medieval Castle and it's many hidden tunnels and traps to rescue the King's daughter who has been kidnapped and kept imprisoned in a hidden tower.</p>
-          </div>
-        </div>
-        <div class="card" id="card2">
-            <div class="front">
-            <h2>Brainstorming</h2>
-            <p>0 cards</p>
-            <p>Things to do: Create character profile for Hanna.</p>
-            </div>
-          </div>
-        <div class="card" id="card3">
-          <div class="front">
-            <h2>Character Design</h2>
-            <p>3 boards, 1 card</p>
-          </div>
-          <div class="back">
-            <h2>King Hordos Gozom</h2>
-            <p>Character Map</p>
-            <p>0 cards</p>
-          </div>
-        </div>
+  <div id="mainContainer" style="display: flex; justify-content: center;align-items: center;">
+      <script defer src="scripts.js"></script>
+      <div id="cardContainer"></div>
+      <div class="input-div">
+        <input class="input" id="file" type="file">
+        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" stroke-linejoin="round" stroke-linecap="round" viewBox="0 0 24 24" stroke-width="2" fill="none" stroke="currentColor" class="icon"><polyline points="16 16 12 12 8 16"></polyline><line y2="21" x2="12" y1="12" x1="12"></line><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"></path><polyline points="16 16 12 12 8 16"></polyline></svg>
+        <a id="downloadFile"></a>
       </div>
-      <div id="container">
-        <div class="card" id="card1">
-          <div class="front">
-            <h2>Gameplay</h2>
-            <p>Here will be more gameplay details</p>
-          </div>
-        </div>
-        <div class="card" id="card2">
-          <div class="front">
-            <h2>Graphics</h2>
-            <img href=""/>
-          </div>  
-        </div>
-        <div class="card" id="card3">
-          <div class="front">
-            <h2>Sounds</h2>
-            <p>All titles</p>
-          </div>
-        </div>
-      </div>
+  </div>
 </body>
 </html>

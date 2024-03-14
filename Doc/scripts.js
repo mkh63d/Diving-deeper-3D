@@ -1,4 +1,4 @@
-//Add Title change when not focused
+//#region titleChange
 let docTitle = document.title;
 window.addEventListener("blur",()=>{
     document.title = "Come back! You piece of garbage!";
@@ -6,69 +6,60 @@ window.addEventListener("blur",()=>{
 window.addEventListener("focus",()=>{
     document.title = docTitle;
 })
+//#endregion
 
-document.addEventListener('DOMContentLoaded', function() {
-  // Get all elements with the class "card"
-  var cardElements = document.querySelectorAll('#container .card .front');
+let fr= new FileReader();
 
-  // Loop through each card element
-  cardElements.forEach(function (card) {
-    // Create the Edit button
-    var editBtn = document.createElement('button');
-    editBtn.className = 'btn btn-primary edit-btn';
-    editBtn.textContent = 'Edit';
+fr.onload=function(){
+  let xml = this.result;
+  let parser = new DOMParser();
+  let xmlDoc = parser.parseFromString(xml, "text/xml");
+  let xmlRoot = xmlDoc.documentElement;
 
-    // Create the Save button
-    var saveBtn = document.createElement('button');
-    saveBtn.className = 'btn btn-secondary save-btn d-none';
-    saveBtn.textContent = 'Save';
+  let cardContainer = document.querySelector("#cardContainer");
 
-    // Create a div to hold the buttons
-    var btnGroup = document.createElement('div');
-    btnGroup.className = 'btn-group';
-    btnGroup.appendChild(editBtn);
-    btnGroup.appendChild(saveBtn);
+  showCards(xmlRoot, cardContainer);
+}
 
-    // Append the button group to the card
-    card.appendChild(btnGroup);
-  });
+function downloadCards(xmlRoot){
+  let xmlText = 'data:application/xml,<?xml version="1.0" encoding="UTF-8"?>${encodeURIComponent(xmlRoot.outerHTML)}';
 
-  var editBtns= document.querySelectorAll('button[class="btn btn-primary .edit-btn"]');
-  var saveBtns= document.querySelectorAll('button[class="btn btn-secondary .save-btn"]');
-  console.log(editBtns);
-  console.log(saveBtns);
+  let a = document.querySelector('#downloadFile');
+  a.download = a.textContent = "xmlResult.xml";
+  let newxml = xmlText.replace(' xmlns="http://www.w3.org/1999/xhtml"', '');
+  a.href = newxml;
+  document.body.appendChild(a);
+}
 
-  // Edit and save processing for each card
-  editBtns.forEach(function(editBtn){
-    editBtn.addEventListener('click', () => {
-      saveBtns.forEach(function(saveBtn) {
-        const cardTextElement = card.querySelector('.front > h2, .front > p');
-        const cardText = cardTextElement.textContent;
+document.querySelector('#file').addEventListener('change',function(){
+  fr.readAsText(this.files[0]);
+})
 
-        const inputField = document.createElement('input');
-        inputField.type = 'text';
-        inputField.className = 'form-control';
-        inputField.value = cardText;
+function showCards(xmlRoot, cardContainer) {
+  downloadCards(xmlRoot, cardContainer)
+  
+  let container = document.createElement('div');
+  let containerClass = document.createAttribute('class');
+  containerClass.value = 'card';
+  container.setAttributeNode(containerClass);
+  let cards = xmlRoot.querySelector('cards');
 
-        cardTextElement.replaceWith(inputField);
-        inputField.focus();
+  if(cards.children[0]){
+    for(let i = 0; i < cards.children.length; i++) {
+      let child = cards.children[i];
 
-        saveBtn.classList.remove('d-none');
-        editBtn.classList.add('d-none');
+      //TODO: Add img and a cases
 
-        inputField.addEventListener('blur', () => {
-          const newText = inputField.value;
+      var cardTitle = document.createElement('h2');
+      var cardText = document.createElement('p');
 
-          const newCardTextElement = document.createElement('p');
-          newCardTextElement.className = 'card-text card-editable';
-          newCardTextElement.textContent = newText;
+      cardTitle.innerHTML = child.querySelector('h2').innerHTML;
+      cardText.innerHTML = child.querySelector('p').innerHTML;
 
-          inputField.replaceWith(newCardTextElement);
+      container.appendChild(cardTitle);
+      container.appendChild(cardText);
+    }
 
-          saveBtn.classList.add('d-none');
-          editBtn.classList.remove('d-none');
-        });
-     });
-    });
-  });
-});
+    cardContainer.appendChild(container);
+  } else throw new Error('No cards found');
+};
