@@ -35,31 +35,61 @@ document.querySelector('#file').addEventListener('change',function(){
   fr.readAsText(this.files[0]);
 })
 
-function showCards(xmlRoot, cardContainer) {
-  downloadCards(xmlRoot, cardContainer)
+function showCards(xmlRoot, container) {
+  downloadCards(xmlRoot, container)
   
-  let container = document.createElement('div');
-  let containerClass = document.createAttribute('class');
-  containerClass.value = 'card';
-  container.setAttributeNode(containerClass);
   let cards = xmlRoot.querySelector('cards');
 
   if(cards.children[0]){
     for(let i = 0; i < cards.children.length; i++) {
-      let child = cards.children[i];
+      //#region dataTake    
 
-      //TODO: Add img and a cases
+      let cardContainer = document.createElement('div');
+      let containerClass = document.createAttribute('class');
+      containerClass.value = 'card';
+      cardContainer.setAttributeNode(containerClass);
 
-      var cardTitle = document.createElement('h2');
-      var cardText = document.createElement('p');
+      let card = cards.children[i];
 
-      cardTitle.innerHTML = child.querySelector('h2').innerHTML;
-      cardText.innerHTML = child.querySelector('p').innerHTML;
+      if(card.querySelector('h2') !== null) {
+        var cardTitle = document.createElement('h2');
+        cardTitle.innerHTML = card.querySelector('h2').innerHTML;
+        cardContainer.appendChild(cardTitle);
+      }
 
-      container.appendChild(cardTitle);
-      container.appendChild(cardText);
+      if(card.querySelector('p') !== null) {
+        var cardText = document.createElement('p');
+        cardText.innerHTML = card.querySelector('p').innerHTML;
+        cardContainer.appendChild(cardText);
+      }
+      
+      if(card.querySelector('img') !== null){
+        var cardImage = document.createElement('img');
+        var cardImageSrc = document.createAttribute('src');
+        cardImageSrc.value = card.querySelector('img').src;
+        cardImage.setAttributeNode(cardImageSrc);
+        cardContainer.appendChild(cardImage);
+      }
+      
+      if(card.querySelector('a') !== null){
+        var cardA = document.createElement('a');
+        var cardAHref = document.createAttribute('href');
+        cardAHref.value = cardA.href;
+        cardA.setAttributeNode(cardAHref);
+        if(cardA.querySelector('a').innerHTML !== null) {
+          cardA.innerHTML = card.querySelector('a').innerHTML;
+        cardContainer.appendChild(cardA);
+      }}
+
+      //#endregion dataTake
+
+
+      container.appendChild(cardContainer);
+
+
     }
+  }else throw new Error('No cards found');
+  
 
-    cardContainer.appendChild(container);
-  } else throw new Error('No cards found');
+
 };
